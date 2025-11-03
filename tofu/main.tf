@@ -4,7 +4,7 @@ terraform {
   required_providers {
     linode = {
       source  = "linode/linode"
-      version = "~> 2.0"
+      version = "~> 3.5"
     }
     null = {
       source  = "hashicorp/null"
