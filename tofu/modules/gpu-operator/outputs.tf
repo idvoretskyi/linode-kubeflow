@@ -1,15 +1,20 @@
 output "namespace" {
-  description = "The namespace where GPU operator is installed"
+  description = "Namespace where GPU operator is installed"
   value       = kubernetes_namespace.gpu_operator.metadata[0].name
 }
 
-output "gpu_operator_version" {
-  description = "The version of GPU operator installed"
+output "release_name" {
+  description = "Helm release name for GPU operator"
+  value       = helm_release.gpu_operator.name
+}
+
+output "version" {
+  description = "GPU Operator chart version"
   value       = helm_release.gpu_operator.version
 }
 
-output "gpu_operator_status" {
-  description = "The status of the GPU operator Helm release"
+output "status" {
+  description = "Status of the GPU operator Helm release"
   value       = helm_release.gpu_operator.status
 }
 

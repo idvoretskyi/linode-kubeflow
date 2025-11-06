@@ -30,37 +30,48 @@ resource "helm_release" "gpu_operator" {
   version    = var.gpu_operator_version
   namespace  = kubernetes_namespace.gpu_operator.metadata[0].name
 
-  create_namespace = false # Namespace is created by kubernetes_namespace resource
+  create_namespace = false
   depends_on       = [kubernetes_namespace.gpu_operator]
 
-  timeout = 600 # 10 minutes
+  timeout       = 600
+  wait          = true
+  wait_for_jobs = true
 
   values = [
     yamlencode({
+      # GPU Operator runtime configuration
       operator = {
         defaultRuntime = "containerd"
       }
+      # NVIDIA driver installation
       driver = {
         enabled = var.install_driver
       }
+      # NVIDIA Container Toolkit
       toolkit = {
         enabled = true
       }
+      # GPU device plugin for Kubernetes
       devicePlugin = {
         enabled = true
       }
+      # DCGM Exporter for GPU metrics in Prometheus
       dcgmExporter = {
         enabled = var.enable_dcgm_exporter
       }
+      # GPU Feature Discovery
       gfd = {
         enabled = true
       }
+      # MIG Manager (not needed for RTX 4000 Ada)
       migManager = {
-        enabled = false # Not needed for RTX 4000 Ada
+        enabled = false
       }
+      # Node Status Exporter
       nodeStatusExporter = {
         enabled = var.enable_node_status_exporter
       }
+      # GPU validation with workload testing
       validator = {
         plugin = {
           env = [
@@ -73,9 +84,6 @@ resource "helm_release" "gpu_operator" {
       }
     })
   ]
-
-  wait          = true
-  wait_for_jobs = true
 }
 
 # Wait for GPU operator to be fully ready

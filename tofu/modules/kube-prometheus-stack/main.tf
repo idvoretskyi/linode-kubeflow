@@ -16,7 +16,8 @@ resource "kubernetes_namespace" "monitoring" {
   metadata {
     name = var.namespace
     labels = {
-      name = var.namespace
+      "app.kubernetes.io/name"       = "kube-prometheus-stack"
+      "app.kubernetes.io/managed-by" = "terraform"
     }
   }
 }
@@ -26,10 +27,12 @@ resource "helm_release" "kube_prometheus_stack" {
   name       = "kube-prometheus-stack"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
-  version    = "67.6.1"
+  version    = var.kube_prometheus_stack_version
   namespace  = kubernetes_namespace.monitoring.metadata[0].name
 
-  # Wait for CRDs to be ready
+  create_namespace = false
+  depends_on       = [kubernetes_namespace.monitoring]
+
   wait          = true
   timeout       = 900
   wait_for_jobs = true
@@ -109,6 +112,4 @@ resource "helm_release" "kube_prometheus_stack" {
       }
     })
   ]
-
-  depends_on = [kubernetes_namespace.monitoring]
 }

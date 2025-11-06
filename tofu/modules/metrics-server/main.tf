@@ -16,16 +16,20 @@ resource "helm_release" "metrics_server" {
   name       = "metrics-server"
   repository = "https://kubernetes-sigs.github.io/metrics-server/"
   chart      = "metrics-server"
-  version    = "3.12.2"
+  version    = var.metrics_server_version
   namespace  = var.namespace
 
-  # Metrics Server configuration using values
+  timeout = 300
+  wait    = true
+
   values = [
     yamlencode({
+      # Required for Linode LKE compatibility
       args = [
         "--kubelet-insecure-tls",
         "--kubelet-preferred-address-types=InternalIP"
       ]
+      # Resource limits for production workloads
       resources = {
         requests = {
           cpu    = "100m"
@@ -36,6 +40,7 @@ resource "helm_release" "metrics_server" {
           memory = "400Mi"
         }
       }
+      # High availability configuration
       replicas = 2
       podDisruptionBudget = {
         enabled      = true
