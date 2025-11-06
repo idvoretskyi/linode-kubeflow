@@ -6,8 +6,6 @@
 *.tfplan
 tfplan
 *.tfplan.*
-.terraform.lock.hcl
-.terraform.lock.json
 crash.log
 crash.*.log
 override.tf
@@ -18,6 +16,8 @@ override.tf.json
 terraform.rc
 .tofurc
 tofu.rc
+
+# Note: .terraform.lock.hcl files are now tracked for consistent provider versions
 
 # Sensitive configuration files
 *.tfvars

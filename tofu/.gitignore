@@ -26,9 +26,8 @@ terraform.rc
 .tofurc
 tofu.rc
 
-# Lock files (optional - some teams commit these)
-.terraform.lock.hcl
-.terraform.lock.json
+# Note: .terraform.lock.hcl files are committed to ensure consistent provider versions
+# This is the recommended approach for Terraform/OpenTofu projects
 
 # Note: Kubeconfig is automatically merged into ~/.kube/config
 # No local kubeconfig files are created by this configuration
