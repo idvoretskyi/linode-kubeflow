@@ -39,7 +39,7 @@ resource "helm_release" "kube_prometheus_stack" {
       # Prometheus configuration
       prometheus = {
         prometheusSpec = {
-          retention    = var.prometheus_retention
+          retention = var.prometheus_retention
           storageSpec = {
             volumeClaimTemplate = {
               spec = {
